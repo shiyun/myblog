@@ -1,9 +1,11 @@
 var mongodb = require('./db');
 var Schema = mongodb.mongoose.Schema;
+
 var UsersSchema = new Schema({
 	userid: String,
 	username: String,
 	password: String,
+	email: String,
 	create_date: {type: Date, default: Date.now},
 });
 
