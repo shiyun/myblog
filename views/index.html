@@ -1,3 +1,8 @@
 <%- include components/header.html %>
-主页s
+<% if (success) { %>
+  <div><%= success %></div>
+<% } %>
+<% if (error) { %>
+  <div><%= error %> </div>
+<% } %>
 <%- include components/footer.html %>

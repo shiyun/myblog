@@ -7,11 +7,11 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function(req, res){
-	res.render('index', {title: '主页'})
+	res.render('index', {title: '主页', username: req.session.username,success: req.flash('success').toString(),error: req.flash('error').toString()})
 });
 
 router.get('/reg', function(req, res){
-	res.render('reg', {title: '注册'})
+	res.render('reg', {title: '注册', username: req.session.username,success: req.flash('success').toString(),error: req.flash('error').toString()})
 });
 
 router.get('/login', function(req, res){
@@ -20,6 +20,14 @@ router.get('/login', function(req, res){
 
 router.get('/post', function(req, res){
 	res.render('reg', {title: '发表'})
+});
+
+router.post('/post', function(req, res){
+	var md5 = crypto.createHash('md5'),
+		pwd = md5.update(req.body.password).digest('hex');
+	User.find(req.body.username, function(err){
+	
+	});
 });
 
 router.get('/logoout', function(req, res){
@@ -37,7 +45,7 @@ router.post('/reg', function(req, res){
 		console.log('两次输入的密码不一致！');
 		return res.redirect('/reg');
 	}
-
+	
 	var md5 = crypto.createHash('md5');
 		password = md5.update(pwd).digest('hex');
 	
@@ -48,9 +56,49 @@ router.post('/reg', function(req, res){
 		email: email
 	};
 	
-	Users.save(newUser, function(err){
-		returnResponse(err, res);
+	Users.findObj({email: newUser.email}, function(err, obj){
+		if (err){
+			req.flash('error', err);
+			return res.redirect('/');
+		}
+		
+		if (!obj){
+			if (obj.email){
+				req.flash('error', '此邮箱已被注册！');
+				return res.redirect('/reg');
+				//res.send({'result':{'message': '此邮箱已注册过！'},'status': {'code':'-1','desp':'此邮箱已注册过！'}});
+			}
+
+			if (obj.username){
+				console.log('此用户名已被注册！');
+				req.flash('error', '此用户名已被注册！');
+				return res.redirect('/reg');
+				//res.send({'result':{'message': '此邮箱已注册过！'},'status': {'code':'-1','desp':'此邮箱已注册过！'}});
+			}
+
+			Users.save(newUser, function(err){
+				if (err){
+					req.flash('error', err);
+					return res.redirect('/reg');
+				}
+				req.session.username = newUser.username;
+				req.flash('success', '注册成功!');
+				res.redirect('/');//注册成功后返回主页
+			});
+		}else{
+			Users.save(newUser, function(err){
+				if (err){
+					req.flash('error', err);
+					return res.redirect('/reg');
+				}
+				req.session.username = newUser.username;
+				req.flash('success', '注册成功!');
+				res.redirect('/');//注册成功后返回主页
+			});
+		}
+
 	});
+	
 
 });
 
