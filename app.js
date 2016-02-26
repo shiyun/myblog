@@ -7,7 +7,6 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var flash = require('connect-flash');
-var multer  = require('multer');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -22,6 +21,7 @@ app.set('view engine', 'html');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -37,7 +37,6 @@ app.use(session({
 	saveUninitialized: true
 }));
 app.use(flash());
-
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);

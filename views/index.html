@@ -1,9 +1,10 @@
 <%- include components/header.html %>
-<% if (success) { %>
-  <div><%= success %></div>
-<% } %>
-<% if (error) { %>
-  <div><%= error %></div>
-<% } %>
-<p>这是主页</p>
+<% posts.forEach(function (post, index) { %>
+  <p><h2><a href="#"><%= post.title %></a></h2></p>
+  <p class="info">
+    作者：<a href="#"><%= post.username %></a> | 
+    日期：<%= post.create_date %>
+  </p>
+  <p><%- post.post %></p>
+<% }) %>
 <%- include components/footer.html %>

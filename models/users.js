@@ -27,8 +27,8 @@ UsersDAO.prototype.update = function(userid, obj, callback){
 }
 
 UsersDAO.prototype.find = function(username, callback){
-	UsersModel.findOne({username: username}, function(err){
-		callback(err);
+	UsersModel.findOne({username: username}, function(err, obj){
+		callback(err, obj);
 	});
 }
 
