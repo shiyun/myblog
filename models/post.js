@@ -45,6 +45,15 @@ ArtsDAO.prototype.find = function(username, callback){
 	});
 }
 
+ArtsDAO.prototype.findOne = function(obj, callback){
+	ArtsModel.find(obj, function(err, objone){
+		objone.forEach(function(post, index){
+			post.post = markdown.toHTML(post.post);
+		});
+		callback(err, objone);
+	});
+}
+
 ArtsDAO.prototype.findObj = function(obj, callback){
 	ArtsModel.findOne(obj, function(err, obj){
 		callback(err, obj);

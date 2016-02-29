@@ -20,8 +20,8 @@ UsersDAO.prototype.save = function(obj, callback){
 	});
 }
 
-UsersDAO.prototype.update = function(userid, obj, callback){
-	UsersModel.update({userid: userid}, obj, function(err){
+UsersDAO.prototype.update = function(username, obj, callback){
+	UsersModel.update({username: username}, obj, function(err){
 		callback(err);
 	});
 }
@@ -38,8 +38,8 @@ UsersDAO.prototype.findObj = function(obj, callback){
 	});
 }
 
-UsersDAO.prototype.remove = function(userid, callback){
-	UsersModel.remove({userid: userid}, function(err){
+UsersDAO.prototype.remove = function(username, callback){
+	UsersModel.remove({username: username}, function(err){
 		callback(err);
 	});
 }

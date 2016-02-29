@@ -168,6 +168,75 @@ router.post('/upload', upload.fields([
     res.redirect('/upload');
 });
 
+router.get('/u/:username', function(req, res){
+	Users.find(req.params.username, function(err, obj){
+		if (!obj){
+			req.flash('error', '用户不存在!'); 
+			return res.redirect('/');//用户不存在则跳转到主页
+		}
+
+		Posts.find(obj.username, function(err, pobj){
+			if (err){
+				req.flash('error', err);
+				return res.redirect('/');
+			}
+			console.log(JSON.stringify(pobj));
+
+			res.render('user', {
+				title: obj.username,
+				posts: pobj,
+				username : req.session.username,
+				success : req.flash('success').toString(),
+				error : req.flash('error').toString()
+			});
+		});
+
+	});
+});
+
+router.get('/u/:username/:time/:title', function(req, res){
+	Posts.findOne({
+		username: req.params.username,
+		create_date: req.params.time,
+		title: req.params.title
+	}, function(err, obj){
+		if (err){
+			req.flash('error', err);
+			return res.redirect('/');
+		}
+		console.log('post:' + obj);
+		res.render('article', {
+		  title: req.params.title,
+		  post: obj[0],
+		  username: req.session.username,
+		  success: req.flash('success').toString(),
+		  error: req.flash('error').toString()
+		});
+	});
+});
+
+router.get('/edit/:username/:time/:title', checkLogin)
+router.get('/edit/:username/:time/:title', function(req, res){
+	Posts.findOne({
+		username: req.params.username,
+		create_date: req.params.time,
+		title: req.params.title
+	}, function(err, obj){
+		if (err){
+			req.flash('error', err);
+			return res.redirect('/');
+		}
+		console.log('post:' + obj);
+		res.render('article', {
+		  title: req.params.title,
+		  post: obj[0],
+		  username: req.session.username,
+		  success: req.flash('success').toString(),
+		  error: req.flash('error').toString()
+		});
+	});
+});
+
 function  returnResponse(err,res){
     if(!err){
         res.send({'result':{},'status': {'code':'1','desp':'ok'}});
