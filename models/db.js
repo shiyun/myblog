@@ -1,7 +1,14 @@
 var config = require('../config/config');
 var mongoose = require('mongoose');
 
-mongoose.connect(config.DB_PATH, function(err){
+var options = {
+    server: {
+        auto_reconnect: true,
+        poolSize: 5
+    }
+};
+
+mongoose.connect(config.DB_PATH, options, function(err){
 	if (err) throw err;
 	console.log('========= mongo contented ===========');
 });
